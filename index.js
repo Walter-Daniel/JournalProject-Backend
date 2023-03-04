@@ -5,18 +5,18 @@ require('dotenv').config()
 //CREAR SERVIDOR
 const app = express();
 
-//RUTAS
 
 //Directorio publico
 
 app.use( express.static('public') );
 
+//Lectura y parseo del body
 
-// app.get('/', (req, res) => {
-//     res.json({
-//         ok: true
-//     })
-// })
+app.use( express.json() );
+
+//RUTAS
+app.use('/api/auth', require('./routes/auth'))
+
 
 
 //Escuchar peticiones
