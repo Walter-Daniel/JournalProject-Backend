@@ -1,5 +1,6 @@
 const User = require('../schemas/UserSchema');
 const bcrypt = require('bcryptjs');
+const { generateJWT } = require('../helpers/jwt');
 
 const register = async(req, res) => {
 
@@ -21,11 +22,17 @@ const register = async(req, res) => {
         newUser.password = bcrypt.hashSync( password, salt );
         await newUser.save();
 
+        const token = await generateJWT( newUser.id, newUser.name, newUser.surname  )
+
         res.status(201).json({
             ok: true,
             msg: 'Usuario creado con éxito',
-            newUser
+            id: newUser.id,
+            name: newUser.name,
+            surname: newUser.surname,
+            token
         });
+
     } catch (error) {
         res.status(500).json({
             ok: false,
@@ -56,13 +63,17 @@ const login = async(req, res) => {
                 ok:false,
                 msg: 'Credenciales incorrectas'
             })
-        }
+        };
+
+        const token = await generateJWT( userExist.id, userExist.name, userExist.surname  );
 
         res.status(201).json({
             ok: true,
             msg: 'Inicio de sesión exitoso',
             id: userExist.id,
-            name: userExist.name
+            name: userExist.name,
+            surname: userExist.surname,
+            token
         });
 
 
@@ -76,11 +87,17 @@ const login = async(req, res) => {
     
 }
 
-const revalidateToken = (req, res) => {
-    res.json({
+const revalidateToken = async(req, res) => {
+
+    const { id, name, surname } = req;
+
+    const token = await generateJWT( id, name, surname  );
+
+    res.status(200).json({
         ok: true,
-        msg:'renew token'
-    })
+        msg:'Se renovó el token',
+        token     
+    });
 }
 
 module.exports = {
