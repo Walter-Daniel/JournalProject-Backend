@@ -5,6 +5,7 @@
 
 const express = require('express');
 const router = express.Router();
+const { fildsValidator } = require('../middlewares/validator')
 const { check } = require('express-validator');
 
 const { register, login, revalidateToken } = require('../controllers/auth')
@@ -28,7 +29,8 @@ router.post(
                     minLowercase: 1, 
                     minUppercase: 1, 
                     minSymbols: 1
-                 }).withMessage('La contraseña debe tener al menos: una letra minúscula, una mayúscula, un caracter especial y una longitud entre 6 y 12 caracteres')
+                 }).withMessage('La contraseña debe tener al menos: una letra minúscula, una mayúscula, un caracter especial y una longitud entre 6 y 12 caracteres'),
+        fildsValidator
     ],
     register);
 
@@ -43,7 +45,8 @@ router.post(
                     minLowercase: 1, 
                     minUppercase: 1, 
                     minSymbols: 1
-                 }).withMessage('La contraseña debe tener al menos: una letra minúscula, una mayúscula, un caracter especial y una longitud entre 6 y 12 caracteres')
+                 }).withMessage('La contraseña debe tener al menos: una letra minúscula, una mayúscula, un caracter especial y una longitud entre 6 y 12 caracteres'),
+        fildsValidator
     ], login);
 
 router.get('/renew', revalidateToken);
