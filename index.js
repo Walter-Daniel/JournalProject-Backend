@@ -22,7 +22,8 @@ app.use( express.static('public') );
 app.use( express.json() );
 
 //RUTAS
-app.use('/api/auth', require('./routes/auth'))
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/notes', require('./routes/notes'));
 
 //Escuchar peticiones
 app.listen( process.env.PORT, () => {
