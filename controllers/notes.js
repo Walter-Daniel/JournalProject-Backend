@@ -1,4 +1,4 @@
-const Note = require('../schemas/NoteSchema')
+const Note = require('../schemas/NoteSchema');
 // {
 //     ok: true,
 //     msg: 'obtener evento'
@@ -6,9 +6,13 @@ const Note = require('../schemas/NoteSchema')
 
 const getNotes = async( req, res ) => {
 
+    const notes = await Note.find();
+
+
     res.json({
         ok: true,
-        msg: 'Nota obtenida'
+        msg: 'Notas obtenidas',
+        notes
     })
 
 };
