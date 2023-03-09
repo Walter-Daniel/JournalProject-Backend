@@ -1,19 +1,39 @@
 const Note = require('../schemas/NoteSchema');
-// {
-//     ok: true,
-//     msg: 'obtener evento'
-// }
 
 const getNotes = async( req, res ) => {
 
-    const notes = await Note.find();
+   try {
 
+        let searchCriteria = {};
+        const name = req.params.title; 
+        if (name) {
+            searchCriteria = {
+                title: new RegExp(name, 'i')
+            }
+        }
+        const [ notes, total ] = await Promise.all([
+            Note.find(searchCriteria).populate({
+                                            path: 'user',
+                                            select: 'name surname'
+                                        })
+                                        .collation({ locale: 'es' }),
+            Note.find(searchCriteria).countDocuments()
+        ]);
 
-    res.json({
-        ok: true,
-        msg: 'Notas obtenidas',
-        notes
-    })
+        res.status(200).json({
+            ok: true,
+            msg: 'Notas obtenidas',
+            notes,
+            total
+        });
+    
+   } catch (error) {
+
+            res.status(400).json({
+                ok: false,
+                msg: 'Error al obtener las notas'
+            });
+   }
 
 };
 
@@ -32,10 +52,10 @@ const createNote = async( req, res ) => {
         })
         
     } catch (error) {
-        console.log(error)
+        
         res.status(500).json({
             ok: false,
-            msg: 'Hubo un error, conectese con el administrador'
+            msg: 'Hubo un error, contactese con el administrador'
         })
     }
 

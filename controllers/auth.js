@@ -89,18 +89,28 @@ const login = async(req, res) => {
 
 const revalidateToken = async(req, res) => {
 
-    const { id, name, surname } = req;
+    try {
 
-    const token = await generateJWT( id, name, surname  );
+        const { id, name, surname } = req;
 
-    res.status(200).json({
-        ok: true,
-        msg:'Se renovó el token',
-        id,
-        name,
-        surname,
-        token     
-    });
+        const token = await generateJWT( id, name, surname  );
+
+        res.status(200).json({
+            ok: true,
+            msg:'Se renovó el token',
+            id,
+            name,
+            surname,
+            token     
+        });
+        
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error al renovar el token'
+        })
+    }
+
 }
 
 module.exports = {

@@ -11,7 +11,7 @@ const { isDate } = require('../helpers/idDate');
 //obtener notas
 
 
-router.get('/', validateJWT , getNotes );
+router.get('/:title?', validateJWT , getNotes );
 
 //crear nuevo evento
 
