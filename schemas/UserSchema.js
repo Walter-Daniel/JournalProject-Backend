@@ -17,6 +17,10 @@ const UserSchema = Schema({
     password: {
         type: String,
         required: true
+    },
+    notes: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
 });
 

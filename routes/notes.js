@@ -11,18 +11,18 @@ const { isDate } = require('../helpers/idDate');
 //obtener notas
 
 
-router.get(
+router.get('/:title?', validateJWT , getNotes );
+
+//crear nuevo evento
+
+router.post(
     '/', 
     [
         check( 'title', 'El título debe ser obligatorio' ).not().isEmpty(),
         check('body', 'El cuerpo de la nota no debe estar vacío').not().isEmpty(),
         check( 'date', 'La fecha debe ser obligatoria' ).custom( isDate ),
         fildsValidator
-    ],validateJWT , getNotes );
-
-//crear nuevo evento
-
-router.post('/', validateJWT , createNote );
+    ],validateJWT , createNote );
 
 //actualizar evento
 
