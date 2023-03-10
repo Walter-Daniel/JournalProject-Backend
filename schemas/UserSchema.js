@@ -20,7 +20,7 @@ const UserSchema = Schema({
     },
     notes: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'Note'
     }
 });
 
