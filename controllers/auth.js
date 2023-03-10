@@ -114,6 +114,5 @@ const revalidateToken = async(req, res) => {
 module.exports = {
     register,
     login,
-    revalidateToken,
-    getUser
+    revalidateToken
 }

@@ -33,10 +33,6 @@ const getNotes = async( req, res ) => {
                                         .collation({ locale: 'es' }),   
             Note.find(searchCriteria).countDocuments()
         ]);
-
-        
-    
-        // const filter = notes.find( searchByTitle )
         
         res.status(200).json({
             ok: true,
