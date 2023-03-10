@@ -82,10 +82,8 @@ const login = async(req, res) => {
             ok: false,
             msg: 'Error al iniciar sesión'
         });
-    }
-
-    
-}
+    };   
+};
 
 const revalidateToken = async(req, res) => {
 
@@ -116,5 +114,6 @@ const revalidateToken = async(req, res) => {
 module.exports = {
     register,
     login,
-    revalidateToken
+    revalidateToken,
+    getUser
 }
