@@ -130,7 +130,7 @@ const deleteNote = async( req, res ) => {
             })
         };
 
-        const noteDelete = await Note.findByIdAndDelete( noteToDelete );
+        await Note.findByIdAndDelete( noteToDelete );
 
         res.json({
             ok: true,
