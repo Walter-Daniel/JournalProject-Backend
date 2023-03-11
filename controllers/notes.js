@@ -1,3 +1,4 @@
+const { findById } = require('../schemas/NoteSchema');
 const Note = require('../schemas/NoteSchema');
 
 const getNotes = async( req, res ) => {
@@ -70,18 +71,79 @@ const createNote = async( req, res ) => {
 };
 
 const updateNote = async( req, res ) => {
-    res.json({
-        ok: true,
-        msg: 'Nota actualizada'
-    });
+    const noteId = req.params.id;
+    const userId = req.id
+
+    try {
+        const noteToUpdate = await Note.findById( noteId );
+        if ( !noteToUpdate ) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No se encontró una nota con ese id'
+            })
+        };
+
+        if( noteToUpdate.user.toString() !== userId) {
+            return res.status(401).json({
+                ok: false,
+                msg: 'No se encuentra autorizado para editar la nota'
+            })
+        };
+
+        const newData = {
+            ...req.body
+        };
+
+        const noteUpdate = await Note.findByIdAndUpdate( noteId,  newData, { new: true } );
+
+        res.status(200).json({
+            ok: true,
+            note: noteUpdate
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });    
+    };
 };
 
 const deleteNote = async( req, res ) => {
-    res.json({
-        ok: true,
-        msg: 'Nota borrada'
-    });
 
+    const noteId = req.params.id;
+    const userId = req.id
+
+    try {
+        const noteToDelete = await Note.findById( noteId );
+        if ( !noteToDelete ) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No se encontró una nota con ese id'
+            })
+        };
+
+        if( noteToDelete.user.toString() !== userId) {
+            return res.status(401).json({
+                ok: false,
+                msg: 'No se encuentra autorizado para borrar esta nota la nota'
+            })
+        };
+
+        const noteDelete = await Note.findByIdAndDelete( noteToDelete );
+
+        res.json({
+            ok: true,
+            msg: 'Nota borrada',
+        });
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });    
+    }; 
 };
 
 module.exports = {

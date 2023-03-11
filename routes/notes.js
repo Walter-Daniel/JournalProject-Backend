@@ -26,7 +26,14 @@ router.post(
 
 //actualizar evento
 
-router.put('/:id', validateJWT , updateNote );
+router.put(
+    '/:id',
+    [
+        check( 'title', 'El título debe ser obligatorio' ).not().isEmpty(),
+        check('body', 'El cuerpo de la nota no debe estar vacío').not().isEmpty(),
+        check( 'date', 'La fecha debe ser obligatoria' ).custom( isDate ),
+        fildsValidator
+    ], validateJWT , updateNote );
 
 //borrar nota
 
