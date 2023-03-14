@@ -21,6 +21,7 @@
     "express-validator": "^6.15.0",
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.4",
-    "mongoose": "^7.0.0"
+    "mongoose": "^7.0.0",
+    "uuid": "^9.0.0"
   }
 }
