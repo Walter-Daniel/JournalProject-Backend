@@ -8,10 +8,10 @@ const router = express.Router();
 const { fildsValidator } = require('../middlewares/validator');
 const { validateJWT } = require('../middlewares/validate-jwt')
 const { check } = require('express-validator');
-const { uploadArchives } = require('../controllers/uploads');
+const { loadArchives } = require('../controllers/uploads');
 
 
-router.post( '/',  uploadArchives);
+router.post( '/',  loadArchives);
 
 // router.post();
 
