@@ -6,6 +6,43 @@ const Image = require('../schemas/ImageSchema');
 const cloudinary = require('cloudinary').v2
 cloudinary.config( process.env.CLOUDINARY_URL );
 
+const getImages = async( req, res ) => {
+    try {
+        let searchCriteria = {};
+        const { id } = req.params; 
+ 
+         if (id) {
+             searchCriteria = {
+                 notes : {
+                     _id : id
+                 }
+             }   
+         };
+ 
+         const [ images, total ] = await Promise.all([
+             Image.find(searchCriteria)
+                                         .collation({ locale: 'es' }),   
+             Image.find(searchCriteria).countDocuments()
+         ]);
+         
+         res.status(200).json({
+             ok: true,
+             msg: 'Imagenes obtenidas',
+             images,
+             total,
+         });       
+     
+    } catch (error) {
+
+        console.log(error)
+ 
+             res.status(400).json({
+                 ok: false,
+                 msg: 'Error al obtener las imagenes'
+             });
+    }
+}
+
 const loadArchives = async( req, res ) => {
 
     if (!req.files || Object.keys(req.files).length === 0 || !req.files.file) {
@@ -37,7 +74,6 @@ const uploadImagesCloudinary = async(req, res ) => {
             }
         
         break;
-
         case 'notes':
             modelo = await Note.findById(id);
             if ( !modelo ) {
@@ -47,15 +83,12 @@ const uploadImagesCloudinary = async(req, res ) => {
             }
         
         break;
-    
         default:
             return res.status(500).json({ msg: 'Se me olvidó validar esto'});
     }
 
     const newImage = new Image()
     try {
-
-        console.log(req)
         const { tempFilePath } = req.files.file
         const { secure_url, public_id } = await cloudinary.uploader.upload( tempFilePath );
         newImage.notes = id
@@ -66,7 +99,7 @@ const uploadImagesCloudinary = async(req, res ) => {
 
         res.status(200).json({
             ok: true,
-            note: newImage        
+            image: newImage        
         });
         
     } catch (error) {
@@ -76,10 +109,10 @@ const uploadImagesCloudinary = async(req, res ) => {
         });
     };
 };
+
 const deleteImagesCloudinary = async(req, res ) => {
 
     const imageId = req.params.id;
-
     try {
         const imageToDelete = await Image.findById( imageId );
         if ( !imageToDelete ) {
@@ -107,6 +140,7 @@ const deleteImagesCloudinary = async(req, res ) => {
 };
 
 module.exports = {
+    getImages,
     loadArchives,
     uploadImagesCloudinary,
     deleteImagesCloudinary
