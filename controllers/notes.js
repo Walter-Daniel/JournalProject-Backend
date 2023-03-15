@@ -31,6 +31,9 @@ const getNotes = async( req, res ) => {
                                             path: 'user',
                                             select: 'id'
                                         })
+                                        .populate({
+                                            path: 'image',
+                                        })
                                         .collation({ locale: 'es' }),   
             Note.find(searchCriteria).countDocuments()
         ]);

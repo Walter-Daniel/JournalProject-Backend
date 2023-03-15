@@ -17,6 +17,10 @@ const NoteSchema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+    image: {
+        type: Schema.Types.ObjectId,
+        ref: 'Image'
     }
 });
 
