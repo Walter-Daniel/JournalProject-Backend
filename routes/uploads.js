@@ -8,12 +8,12 @@ const router = express.Router();
 const { fildsValidator } = require('../middlewares/validator');
 const { validateJWT } = require('../middlewares/validate-jwt')
 const { check } = require('express-validator');
-const { loadArchives } = require('../controllers/uploads');
+const { loadArchives, uploadImagesCloudinary, deleteImagesCloudinary,  } = require('../controllers/uploads');
 
 
-router.post( '/',  loadArchives);
+router.post( '/:collection/:id', [ validateJWT ] , uploadImagesCloudinary);
 
-// router.post();
+router.delete('/:id', [ validateJWT ], deleteImagesCloudinary );
 
 // router.get('/renew', validateJWT ,revalidateToken);
 
