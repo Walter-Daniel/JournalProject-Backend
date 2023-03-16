@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose');
 
 const NoteSchema = Schema({
+    
     title: {
         type: String,
         required: true
@@ -18,9 +19,9 @@ const NoteSchema = Schema({
         ref: 'User',
         required: true
     },
-    image: {
-        type: Schema.Types.ObjectId,
-        ref: 'Image'
+    imageUrls: {
+        type: Array,
+        "default": []
     }
 });
 
