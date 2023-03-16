@@ -62,7 +62,6 @@ const createNote = async( req, res ) => {
         });
         
     } catch (error) {  
-        console.log(error)
         res.status(500).json({
             ok: false,
             msg: 'Hubo un error, contactese con el administrador'
@@ -103,11 +102,10 @@ const updateNote = async( req, res ) => {
         });
 
     } catch (error) {
-        console.log(error)
-        // res.status(500).json({
-        //     ok: false,
-        //     msg: 'Hable con el administrador'
-        // });    
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });    
     };
 };
 
@@ -140,7 +138,6 @@ const deleteNote = async( req, res ) => {
         });
 
     } catch (error) {
-        console.log(error)
         res.status(500).json({
             ok: false,
             msg: 'Hable con el administrador'
