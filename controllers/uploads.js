@@ -2,6 +2,7 @@ const { uploadArchives } = require('../helpers/uploadArchive')
 const Note = require('../schemas/NoteSchema');
 const User = require('../schemas/UserSchema');
 const Image = require('../schemas/ImageSchema');
+const fs = require('fs');
 
 const cloudinary = require('cloudinary').v2
 cloudinary.config( process.env.CLOUDINARY_URL );
@@ -20,7 +21,7 @@ const getImages = async( req, res ) => {
          };
  
          const [ images, total ] = await Promise.all([
-             Image.find(searchCriteria)
+             Image.find(searchCriteria).populate
                                          .collation({ locale: 'es' }),   
              Image.find(searchCriteria).countDocuments()
          ]);
@@ -33,8 +34,6 @@ const getImages = async( req, res ) => {
          });       
      
     } catch (error) {
-
-        console.log(error)
  
              res.status(400).json({
                  ok: false,
@@ -62,52 +61,63 @@ const uploadImagesCloudinary = async(req, res ) => {
 
     const { id, collection } = req.params;
 
-    let modelo;
+    // let modelo;
 
-    switch ( collection ) {
-        case 'users':
-            modelo = await User.findById(id);
-            if ( !modelo ) {
-                return res.status(400).json({
-                    msg: `No existe un usuario con el id ${ id }`
-                });
+    // switch ( collection ) {
+    //     case 'users':
+    //         modelo = await User.findById(id);
+    //         if ( !modelo ) {
+    //             return res.status(400).json({
+    //                 msg: `No existe un usuario con el id ${ id }`
+    //             });
+    //         }
+        
+    //     break;
+    //     case 'notes':
+    //         modelo = await Note.findById(id);
+    //         if ( !modelo ) {
+    //             return res.status(400).json({
+    //                 msg: `No existe una nota con el id ${ id }`
+    //             });
+    //         }
+        
+    //     break;
+    //     default:
+    //         return res.status(500).json({ msg: 'Se me olvidó validar esto'});
+    // }
+
+
+
+    const promises = req.files.map(file => {
+        return new Promise((resolve, reject) => {
+          cloudinary.uploader.upload(file.path, (error, { public_id, secure_url  }) => {
+            if (error) reject(error);
+
+            const info = {
+                title : public_id,
+                url: secure_url,
+                notes : id
             }
-        
-        break;
-        case 'notes':
-            modelo = await Note.findById(id);
-            if ( !modelo ) {
-                return res.status(400).json({
-                    msg: `No existe una nota con el id ${ id }`
-                });
-            }
-        
-        break;
-        default:
-            return res.status(500).json({ msg: 'Se me olvidó validar esto'});
-    }
-
-    const newImage = new Image()
-    try {
-        const { tempFilePath } = req.files.file
-        const { secure_url, public_id } = await cloudinary.uploader.upload( tempFilePath );
-        newImage.notes = id
-        newImage.title = public_id;
-        newImage.url = secure_url;
-
-        await newImage.save();
-
-        res.status(200).json({
-            ok: true,
-            image: newImage        
+                
+            resolve(info);
+            console.log(secure_url, 'desde el interior de la promesa')
+          });
         });
-        
-    } catch (error) {
-        res.status(500).json({
-            ok: false,
-            msg: 'Hubo un error, contactese con el administrador'
+      });
+      
+      try {
+        const imageUrls = await Promise.all(promises);
+        const images = imageUrls.map(url => new Image( url ));
+        const result = await Image.insertMany(images);
+
+        return res.json({
+            ok:true,
+            msg: 'Imagenes subidas exitosamente',
+            result
         });
-    };
+      } catch (error) {
+        res.status(500).send('Error al subir las imagenes');
+      }
 };
 
 const deleteImagesCloudinary = async(req, res ) => {

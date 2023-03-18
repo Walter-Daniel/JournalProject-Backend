@@ -1,4 +1,4 @@
-const { findById } = require('../schemas/NoteSchema');
+
 const Note = require('../schemas/NoteSchema');
 
 const getNotes = async( req, res ) => {
