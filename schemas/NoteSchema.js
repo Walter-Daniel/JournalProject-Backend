@@ -20,9 +20,13 @@ const NoteSchema = Schema({
         required: true
     },
     imageUrls: {
-        type: Array,
-        "default": []
+        type: Schema.Types.ObjectId,
+        ref: 'Image',
     }
+    // imageUrls: {
+    //     type: Array,
+    //     "default": []
+    // }
 });
 
 NoteSchema.method('toJSON', function() {
