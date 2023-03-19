@@ -19,14 +19,14 @@ const NoteSchema = Schema({
         ref: 'User',
         required: true
     },
-    imageUrls: {
-        type: Schema.Types.ObjectId,
-        ref: 'Image',
-    }
     // imageUrls: {
-    //     type: Array,
-    //     "default": []
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'Image',
     // }
+    imageUrls: {
+        type: Array,
+        "default": []
+    }
 });
 
 NoteSchema.method('toJSON', function() {
