@@ -3,17 +3,6 @@ const Note = require('../schemas/NoteSchema');
 
 const getNotes = async( req, res ) => {
 
-
-
-    //     const la = await Note.find({ 
-        
-    //      }).populate({ path: 'user', match: { '_id': id }  }).exec()
-        
-    //     res.send({
-    //         ok:true,
-    //         la
-    //     })
-    //   ;
    try {
        let searchCriteria = {};
        const { id} = req.params; 
