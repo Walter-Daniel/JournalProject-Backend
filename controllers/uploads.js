@@ -100,7 +100,6 @@ const uploadImagesCloudinary = async(req, res ) => {
             }
                 
             resolve(info);
-            console.log(secure_url, 'desde el interior de la promesa')
           });
         });
       });
